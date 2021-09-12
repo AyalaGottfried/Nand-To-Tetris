@@ -1,0 +1,210 @@
+class Game {
+    field Bricks bricks;
+    field Ball ball;
+    field Base base;
+    field DashBoard board;
+    field int speed, mult;
+
+    constructor Game new(int m) {
+        let mult = m;
+        let board = DashBoard.new();
+        let bricks = Bricks.new(board);
+        let ball = Ball.new(bricks, 20, mult);
+        let base = Base.new(20, mult);
+        let speed = 9;
+        return this;
+    }
+
+    method void run () {
+        /** Runs the game */
+        var int p;
+        var boolean ret, fail;
+        while (true) {
+            do Sys.wait(speed);
+            let p = base.move();
+            let ret = ball.move(p);
+            if (~ret) {
+                let fail = board.breakHeart();
+                if (fail) {
+                    do printFail();
+                }
+                else {
+                    do failed();
+                }
+            }
+            if (bricks.getBroken() = 55) {
+                do levelUp();
+            }
+        }
+        return;
+   }
+
+   method void printFail() {
+       /** Prints fail message */
+        var int i;
+        do drawBrokenHeart(3599);
+        do Output.moveCursor(12, 29);
+        do Output.printString("fail!");
+        do Output.moveCursor(14, 27);
+        do Output.printString("lives: ");
+        do Output.printInt(board.getLives());
+        do Sys.wait(2000);
+        do ereaseBrokenHeart(3599);
+        let i=0;
+        while (i < 200) {
+            do Output.backSpace();
+            let i = i+1;
+        }
+        return;
+
+   }
+
+   method void failed() {
+       /** Hults the game with fail */
+        do drawThumbsDown(3599);
+        do Output.moveCursor(12, 26);
+        do Output.printString("game over!");
+        do Output.moveCursor(14, 26);
+        do Output.printString("score: ");
+        do Output.printInt(board.getScore());
+        do Sys.wait(500);
+        do Sys.halt();
+        return;
+    }
+
+    method void levelUp() {
+        /** Increase the level by one */
+        var int i, level;
+        do drawThumbsUp(3599);
+        let level = board.levelUp();
+        do Output.moveCursor(12, 28);
+        do Output.printString("level ");
+        do Output.printInt(level);
+        do Sys.wait(2000);
+        do ereaseThumbsUp(3599);
+        let i=0;
+        while (i < 12) {
+            do Output.backSpace();
+            let i = i+1;
+        }
+        if (speed > 2) {
+            let speed = speed-2;
+        }
+        do ball.dispose();
+        do bricks.dispose();
+        do base.dispose();
+        let bricks = Bricks.new(board);
+        let ball = Ball.new(bricks, 20, mult);
+        let base = Base.new(20, mult);
+        return;
+    }
+
+    method void drawThumbsUp(int location) {
+        /** Draws a thumbs up icon */
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+32, 224);
+        do Memory.poke(memAddress+64, 160);
+        do Memory.poke(memAddress+96, 160);
+        do Memory.poke(memAddress+128, 160);
+        do Memory.poke(memAddress+160, 8096);
+        do Memory.poke(memAddress+192, 12320);
+        do Memory.poke(memAddress+224, 15407);
+        do Memory.poke(memAddress+256, 8249);
+        do Memory.poke(memAddress+288, 15881);
+        do Memory.poke(memAddress+320, 8201);
+        do Memory.poke(memAddress+352, 15881);
+        do Memory.poke(memAddress+384, 8201);
+        do Memory.poke(memAddress+416, 12297);
+        do Memory.poke(memAddress+448, 8191);
+        return;
+    }
+
+    method void ereaseThumbsUp(int location) {
+        /** Ereases the thumbs up icon */
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+32, 0);
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 0);
+        do Memory.poke(memAddress+128,0);
+        do Memory.poke(memAddress+160,0);
+        do Memory.poke(memAddress+192,0);
+        do Memory.poke(memAddress+224,0);
+        do Memory.poke(memAddress+256,0);
+        do Memory.poke(memAddress+288,0);
+        do Memory.poke(memAddress+320,0);
+        do Memory.poke(memAddress+352,0);
+        do Memory.poke(memAddress+384,0);
+        do Memory.poke(memAddress+416,0);
+        do Memory.poke(memAddress+448,0);
+        return;
+    }
+
+    method void drawBrokenHeart(int location) {
+        /** Draws a broken heart icon */
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+64, 7224);
+        do Memory.poke(memAddress+96, 13932);
+        do Memory.poke(memAddress+128, 25158);
+        do Memory.poke(memAddress+160, 16962);
+        do Memory.poke(memAddress+192, 25158);
+        do Memory.poke(memAddress+224, 12876);
+        do Memory.poke(memAddress+256, 6744);
+        do Memory.poke(memAddress+288, 3696);
+        do Memory.poke(memAddress+320, 1632);
+        do Memory.poke(memAddress+352, 576);
+        return;
+    }
+
+    method void ereaseBrokenHeart(int location) {
+        /** Eareses the broken heart icon */
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 0);
+        do Memory.poke(memAddress+128,0);
+        do Memory.poke(memAddress+160,0);
+        do Memory.poke(memAddress+192,0);
+        do Memory.poke(memAddress+224,0);
+        do Memory.poke(memAddress+256,0);
+        do Memory.poke(memAddress+288,0);
+        do Memory.poke(memAddress+320,0);
+        do Memory.poke(memAddress+352,0);
+        return;
+    }
+
+    method void drawThumbsDown(int location) {
+        /** Draws a thumbs down icon */
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, -8);
+        do Memory.poke(memAddress+64, -28660);
+        do Memory.poke(memAddress+96, -28668);
+        do Memory.poke(memAddress+128, -28548);
+        do Memory.poke(memAddress+160, -28668);
+        do Memory.poke(memAddress+192, -28548);
+        do Memory.poke(memAddress+224, -25596);
+        do Memory.poke(memAddress+256, -3012);
+        do Memory.poke(memAddress+288, 1036);
+        do Memory.poke(memAddress+320, 1528);
+        do Memory.poke(memAddress+352, 1280);
+        do Memory.poke(memAddress+384, 1280);
+        do Memory.poke(memAddress+416, 1280);
+        do Memory.poke(memAddress+448, 1792);
+        do Memory.poke(memAddress+480, 0);
+        return;
+    }
+
+    method void dispose() {
+        do ball.dispose();
+        do base.dispose();
+        do board.dispose();
+        do bricks.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+   
+}

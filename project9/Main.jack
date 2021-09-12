@@ -1,0 +1,27 @@
+class Main {
+    function void main() {
+        var int mult;
+        var Game game;
+        let mult = Main.getSpeed();
+        let game = Game.new(mult);
+        do game.run();
+        do game.dispose();
+        return;
+    }
+
+    function int getSpeed() {
+        /** Reads the desired speed from the user */
+        var int m;
+        do Output.moveCursor(11, 20);
+        let m = Keyboard.readInt("Enter speed (1-6): ");
+        while ((m<1)|(m>6)){
+            do Screen.clearScreen();           
+            do Output.moveCursor(10, 23);
+            do Output.printString("unvalid speed.");
+            do Output.moveCursor(11, 20);
+            let m = Keyboard.readInt("Enter speed (1-6): ");
+        }
+        do Screen.clearScreen();  
+        return m;
+    }
+}

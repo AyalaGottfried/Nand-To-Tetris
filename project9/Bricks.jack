@@ -1,0 +1,66 @@
+class Bricks {
+    field Array bricks;
+    field int broken;
+    field DashBoard board;
+
+    constructor Bricks new(DashBoard b) {
+        var int i, j;
+        var Array tmp;
+        let board = b;
+        let broken = 0;
+        let i=0;
+        let bricks = Array.new(5);
+        while (i<5) {
+            let j = 0;
+            let tmp = Array.new(11);
+            while (j<11) {
+                let tmp[j] = Brick.new(35*j+68, 20*i+10);
+                let j = j+1;
+            }
+            let bricks[i] = tmp;
+            let i = i+1;
+        }
+        return this;
+    }
+
+    method Brick get(int i, int j) {
+        /** Returns the i, j brick */
+        var Array tmp;
+        let tmp = bricks[i];
+        return tmp[j];
+    }
+
+    method void break(int i, int j) {
+        /** Breaks the i, j brick */
+        var Brick b;
+        let b = get(i, j);
+        do b.break();
+        let broken = broken+1;
+        do board.break(broken);
+        return;
+    }
+
+    method int getBroken() {
+        /** Returns the number of the broken bricks */
+        return broken;
+    }
+
+    method void dispose() {
+        var int i, j;
+        var Brick b;
+        var Array tmp;
+        let i=0;
+        while (i<5) {
+            let j = 0;
+            let tmp = bricks[i];
+            while (j<11) {
+                let b = tmp[j];
+                do b.dispose();
+                let j = j+1;
+            }
+            let i = i+1;
+        }
+        do Memory.deAlloc(this);
+        return;
+    }
+}

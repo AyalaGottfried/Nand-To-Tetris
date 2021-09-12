@@ -1,0 +1,102 @@
+class DashBoard {
+    field int lives, score, level;
+
+    constructor DashBoard new() {
+        let lives = 3;
+        let score = 0;
+        let level = 1;
+        do Screen.drawLine(0, 226, 511, 226);
+        do drawHeart(7550);
+        do drawHeart(7549);
+        do drawHeart(7548);
+        do writeScore();
+        do writeLevel();
+        return this;
+    }
+
+    method void drawHeart(int location) {
+        /** Draws one heart */
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+64, 3640);
+        do Memory.poke(memAddress+96, 7020);
+        do Memory.poke(memAddress+128, 12742);
+        do Memory.poke(memAddress+160, 8322);
+        do Memory.poke(memAddress+192, 12294);
+        do Memory.poke(memAddress+224, 6156);
+        do Memory.poke(memAddress+256, 3096);
+        do Memory.poke(memAddress+288, 1584);
+        do Memory.poke(memAddress+320, 864);
+        do Memory.poke(memAddress+352, 448);
+        return;
+    }
+
+    method void erease(int location) {
+        /** Erease one heart */
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 0);
+        do Memory.poke(memAddress+128,0);
+        do Memory.poke(memAddress+160,0);
+        do Memory.poke(memAddress+192,0);
+        do Memory.poke(memAddress+224,0);
+        do Memory.poke(memAddress+256,0);
+        do Memory.poke(memAddress+288,0);
+        do Memory.poke(memAddress+320,0);
+        do Memory.poke(memAddress+352,0);
+        return;
+    }
+
+    method boolean breakHeart() {
+        /** Breaks one heart. Returns false if the number of lives is 0, else true */
+        do erease(7551-lives);
+        let lives = lives-1;
+        return lives;
+    }
+
+    method int levelUp() {
+        /** Increase the level by one. Returns the current level */
+        let level = (level+1);
+        do writeLevel();
+        return level;
+    }
+
+    method void writeScore() {
+        /** Writes the current score to the board */
+        do Output.moveCursor(21, 3);
+        do Output.printString("score: ");
+        do Output.printInt(score);
+        return;
+    }
+
+    method void writeLevel() {
+        /** Writes the current level to the board */
+        do Output.moveCursor(21, 29);
+        do Output.printString("level ");
+        do Output.printInt(level);
+        return;
+    }
+
+    method int getLives() {
+        /** Returns the number of lives */
+        return lives;
+    }
+
+    method int getScore() {
+        /** Returns the user's score */
+        return score;
+    }
+
+    method void break(int broken) {
+        /** Increase the score according to the number of broken bricks */
+        let score = (((level-1)*550)+(broken*10));
+        do writeScore();
+        return;
+    }
+
+    method void dispose() {
+         do Memory.deAlloc(this);
+         return;
+    }
+}

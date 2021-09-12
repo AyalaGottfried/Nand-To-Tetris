@@ -1,0 +1,152 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux4Way16.hdl
+
+/**
+ * 4-way 16-bit multiplexor:
+ * out = a if sel == 00
+ *       b if sel == 01
+ *       c if sel == 10
+ *       d if sel == 11
+ */
+
+CHIP Mux4Way16 {
+    IN a[16], b[16], c[16], d[16], sel[2];
+    OUT out[16];
+
+    PARTS:
+    Not(in= sel[1],out= nots0);
+    Not(in= sel[0],out= nots1);
+	And16(a=a ,b[0]= nots0,
+				b[1]= nots0,
+				b[2]= nots0,
+				b[3]= nots0,
+				b[4]= nots0,
+				b[5]= nots0,
+				b[6]= nots0,
+				b[7]= nots0,
+				b[8]= nots0,
+				b[9]= nots0,
+				b[10]= nots0,
+				b[11]= nots0,
+				b[12]= nots0,
+				b[13]= nots0,
+				b[14]= nots0,
+				b[15]= nots0,out= a1);
+	And16(a=a1,b[0]= nots1,
+				b[1]= nots1,
+				b[2]= nots1,
+				b[3]= nots1,
+				b[4]= nots1,
+				b[5]= nots1,
+				b[6]= nots1,
+				b[7]= nots1,
+				b[8]= nots1,
+				b[9]= nots1,
+				b[10]=nots1,
+				b[11]=nots1,
+				b[12]=nots1,
+				b[13]=nots1,
+				b[14]=nots1,
+				b[15]=nots1,out=and1 );
+	And16(a=b ,b[0]= nots0,
+				b[1]= nots0,
+				b[2]= nots0,
+				b[3]= nots0,
+				b[4]= nots0,
+				b[5]= nots0,
+				b[6]= nots0,
+				b[7]= nots0,
+				b[8]= nots0,
+				b[9]= nots0,
+				b[10]= nots0,
+				b[11]= nots0,
+				b[12]= nots0,
+				b[13]= nots0,
+				b[14]= nots0,
+				b[15]= nots0,out= b1);
+	And16(a=b1 ,b[0]= sel[0],
+				b[1]= sel[0],
+				b[2]= sel[0],
+				b[3]= sel[0],
+				b[4]= sel[0],
+				b[5]= sel[0],
+				b[6]= sel[0],
+				b[7]= sel[0],
+				b[8]= sel[0],
+				b[9]= sel[0],
+				b[10]=sel[0],
+				b[11]=sel[0],
+				b[12]=sel[0],
+				b[13]=sel[0],
+				b[14]=sel[0],
+				b[15]=sel[0],out=and2 );
+	And16(a=c ,b[0]=  sel[1],
+				b[1]= sel[1],
+				b[2]= sel[1],
+				b[3]= sel[1],
+				b[4]= sel[1],
+				b[5]= sel[1],
+				b[6]= sel[1],
+				b[7]= sel[1],
+				b[8]= sel[1],
+				b[9]= sel[1],
+				b[10]=sel[1],
+				b[11]=sel[1],
+				b[12]=sel[1],
+				b[13]=sel[1],
+				b[14]=sel[1],
+				b[15]=sel[1],out= c1);
+	And16(a=c1 ,b[0]= nots1,
+				b[1]= nots1,
+				b[2]= nots1,
+				b[3]= nots1,
+				b[4]= nots1,
+				b[5]= nots1,
+				b[6]= nots1,
+				b[7]= nots1,
+				b[8]= nots1,
+				b[9]= nots1,
+				b[10]=nots1,
+				b[11]=nots1,
+				b[12]=nots1,
+				b[13]=nots1,
+				b[14]=nots1,
+				b[15]=nots1,out=and3 );
+	And16(a=d ,b[0]=  sel[1],
+				b[1]= sel[1],
+				b[2]= sel[1],
+				b[3]= sel[1],
+				b[4]= sel[1],
+				b[5]= sel[1],
+				b[6]= sel[1],
+				b[7]= sel[1],
+				b[8]= sel[1],
+				b[9]= sel[1],
+				b[10]=sel[1],
+				b[11]=sel[1],
+				b[12]=sel[1],
+				b[13]=sel[1],
+				b[14]=sel[1],
+				b[15]=sel[1],out= d1);
+	And16(a=d1 ,b[0]= sel[0],
+				b[1]= sel[0],
+				b[2]= sel[0],
+				b[3]= sel[0],
+				b[4]= sel[0],
+				b[5]= sel[0],
+				b[6]= sel[0],
+				b[7]= sel[0],
+				b[8]= sel[0],
+				b[9]= sel[0],
+				b[10]=sel[0],
+				b[11]=sel[0],
+				b[12]=sel[0],
+				b[13]=sel[0],
+				b[14]=sel[0],
+				b[15]=sel[0],out=and4 );
+	Or16(a=and1 ,b= and2,out= or1);
+	Or16(a=or1 ,b= and3,out= or2);
+	Or16(a=or2 ,b= and4,out= out);
+}

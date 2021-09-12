@@ -1,0 +1,55 @@
+class Brick {
+    field int m_x, m_y;
+
+    constructor Brick new(int x, int y) {
+        let m_x = x;
+        let m_y = y;
+        do draw();
+        return this;
+    }
+
+    method void draw () {
+        /** Draws the brick */
+         do Screen.drawRectangle(m_x, m_y ,m_x+30 ,m_y+15 );
+         return;
+    }
+
+    method void break () {
+        /** Breaks the brick */
+        if ((m_x < 0)|(m_y<0)) {
+            return;
+        }
+        do Screen.setColor(false);
+        do Screen.drawRectangle(m_x, m_y ,m_x+30 ,m_y+15 );
+        do Screen.setColor(true);
+        return;
+    }
+
+    method int getx() {
+        /** Returns the x position */
+        return m_x;
+    }
+
+    method int gety() {
+        /** Returns the y position */
+        return m_y;
+    }
+
+    method void setx(int x) {
+        /** Sets the x position to x */
+        let m_x = x;
+        return;
+    }
+
+    method void sety(int y) {
+        /** Sets the y position to y */
+        let m_x = y;
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+}

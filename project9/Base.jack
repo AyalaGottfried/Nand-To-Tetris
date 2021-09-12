@@ -1,0 +1,58 @@
+class Base {
+    field int p, length, mult;
+ 
+    constructor Base new(int l, int m) {
+        let p = 256;
+        let length = l;
+        let mult = m;
+        do Screen.drawRectangle(p-length ,220 ,p+length,225 );
+        return this;
+    }
+
+    method void left () {
+        /** Moves one step to left */
+        if ((p-(3*mult)) < length) {
+            return;
+        }
+        do Screen.setColor(false);
+        do Screen.drawRectangle(p-length ,220 ,p+length,225 );
+        do Screen.setColor(true);
+        let p = p-(3*mult);
+        do Screen.drawRectangle(p-length ,220 ,p+length,225 );
+        return;
+    }
+
+    method void right () {
+        /** Moves one step to right */
+        if ((p+(3*mult)) > (511-length)) {
+            return;
+        }
+        do Screen.setColor(false);
+        do Screen.drawRectangle(p-length ,220 ,p+length,225 );
+        do Screen.setColor(true);
+        let p = p+(3*mult);
+        do Screen.drawRectangle(p-length ,220 ,p+length,225 );
+        return;
+    }
+
+    method int move() {
+        /** Reads input from the user and moves according to it  */
+        var char key;
+        let key = Keyboard.keyPressed();
+        if (key = 130) {
+            do left();
+        }
+        if (key = 132) {
+            do right();
+        }
+        return p;
+    }
+
+    method void dispose() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(p-length ,220 ,p+length,225 );
+        do Screen.setColor(true);
+        do Memory.deAlloc(this);
+        return;
+    }
+}
